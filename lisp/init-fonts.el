@@ -1,6 +1,13 @@
 ;;; Character sets
 
 
+;;; Using Source Code Pro font
+
+;; https://github.com/adobe-fonts/source-code-pro
+
+(set-default-font "Source Code Pro")
+
+
 ;;; Changing font sizes
 
 (require-package 'default-text-scale)

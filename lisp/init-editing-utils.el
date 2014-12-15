@@ -309,11 +309,50 @@ With arg N, insert N newlines."
 
 
 (require-package 'guide-key)
-(setq guide-key/guide-key-sequence '("C-x" "C-c" "C-x 4" "C-x 5" "C-c ;" "C-c ; f" "C-c ' f" "C-x n" "C-x C-r" "C-x r" "M-s" "C-h"))
+(setq guide-key/guide-key-sequence '("C-x" "C-c" "C-x 4" "C-x 5" "C-c ;" "C-c ; f" "C-c ' f" "C-x n" "C-x C-r" "C-x r" "M-s" "C-h" "C-x C-a"))
 (add-hook 'after-init-hook
           (lambda ()
             (guide-key-mode 1)
             (diminish 'guide-key-mode)))
 
+
+
+;;----------------------------------------------------------------------------
+;; TextMate-like commenting
+;; Source: http://paste.lisp.org/display/42657 (now 404)
+;;----------------------------------------------------------------------------
+(defun comment-or-uncomment-line (&optional lines)
+  "Comment current line. Argument gives the number of lines forward to comment"
+  (interactive "P")
+  (comment-or-uncomment-region
+   (line-beginning-position)
+   (line-end-position lines)))
+
+(defun comment-or-uncomment-region-or-line (&optional lines)
+  "If the line or region is not a comment, comments region if mark is active,
+line otherwise. If the line or region is a comment, uncomment."
+  (interactive "P")
+  (if mark-active
+      (if (< (mark) (point))
+          (comment-or-uncomment-region (mark) (point))
+        (comment-or-uncomment-region (point) (mark)))
+    (comment-or-uncomment-line lines)))
+
+(global-set-key (kbd "C-c ;") 'comment-or-uncomment-region-or-line)
 
 (provide 'init-editing-utils)
+
+
+
+;;----------------------------------------------------------------------------
+;; Select a directory for command (useful with grep/ag/compile)
+;;----------------------------------------------------------------------------
+(defun in-directory (dir)
+  "Runs execute-extended-command with default-directory set to the given
+directory."
+  (interactive "DIn directory: ")
+  (let ((default-directory dir))
+    (call-interactively 'execute-extended-command)))
+
+(global-set-key (kbd "M-X") 'in-directory)
+
