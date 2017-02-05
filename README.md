@@ -1,5 +1,18 @@
 [![Build Status](https://travis-ci.org/purcell/emacs.d.png?branch=master)](https://travis-ci.org/purcell/emacs.d)
 
+# Notes
+
+This is a fork of Steve Purcell's fantastic emacs config tree. I have
+made the following configuration changes:
+
+* added C++ mode (based on rtags)
+* added golang mode
+* disabled Ruby related configuration
+* disbaled PHP
+* disabled Haskell
+* disabled Elm
+* disabled Erlang
+
 # A reasonable Emacs config
 
 This is my emacs configuration tree, continually used and tweaked
