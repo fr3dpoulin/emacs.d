@@ -5,6 +5,8 @@
 (require-package 'go-guru)
 (require-package 'go-dlv)
 (require-package 'go-eldoc)
+;; NOTE: go-impl is currently incompatible with ivy so we are
+;; keeping it disabled.
 ;;(require-package 'go-impl)
 (require-package 'go-projectile)
 (require-package 'godoctor)
