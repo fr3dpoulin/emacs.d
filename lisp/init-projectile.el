@@ -12,7 +12,8 @@
      '(:eval
        (if (file-remote-p default-directory)
            " Pr"
-         (format " Pr[%s]" (projectile-project-name)))))))
+         (format " Pr[%s]" (projectile-project-name)))))
+    (global-set-key (kbd "C-x p") 'projectile-find-file)))
 
 
 (provide 'init-projectile)
