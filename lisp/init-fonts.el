@@ -5,7 +5,7 @@
 
 ;; https://github.com/adobe-fonts/source-code-pro
 
-(set-default-font "Source Code Pro")
+(set-default-font "Hack")
 
 
 ;;; Changing font sizes

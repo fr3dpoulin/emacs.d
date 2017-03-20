@@ -3,6 +3,7 @@
     (setq-default ivy-use-virtual-buffers t
                   ivy-count-format ""
                   projectile-completion-system 'ivy
+                  magit-completing-read-function 'ivy-completing-read
                   ivy-initial-inputs-alist
                   '((counsel-M-x . "^")
                     (man . "^")

@@ -12,6 +12,8 @@
 (require-package 'godoctor)
 (require-package 'go-stacktracer)
 (require-package 'go-snippets)
+(require-package 'go-direx)
+(require-package 'go-add-tags)
 
 ;; Snag the user's GOPATH
 (when (memq window-system '(mac ns))
@@ -20,7 +22,10 @@
 ;; Define function to call when go-mode loads
 (defun my-go-mode-hook ()
   (add-hook 'before-save-hook #'gofmt-before-save) ; gofmt before every save
-  (setq gofmt-command "goimports")                 ; gofmt uses invokes goimports
+
+  (setq gofmt-command "goimports")      ; gofmt uses invokes goimports
+  (setq go-add-tags-style 'snake-case)             ; go-add-tags will default to snake-case
+
   (if (not (string-match "go" compile-command))    ; set compile command default
       (set (make-local-variable 'compile-command)
            "go build -v && go test -v && go vet"))
@@ -38,6 +43,10 @@
   (local-set-key (kbd "C-c C-g e") 'godoctor-extract)
   (local-set-key (kbd "C-c C-g d") 'go-goto-docstring)
   (local-set-key (kbd "C-c C-g v") 'godoctor-toggle)
+
+  (local-set-key (kbd "C-c C-j") 'go-direx-pop-to-buffer)
+
+  (local-set-key (kbd "C-c t") 'go-add-tags)
 
   ;; Company (autocomplate)
   ;;(set (make-local-variable 'company-backends) '(company-go))
