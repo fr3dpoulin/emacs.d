@@ -1,15 +1,21 @@
 #!/bin/sh
 
-go get -u -v golang.org/x/tools/cmd/goimports
-go get -u -v github.com/rogpeppe/godef
-go get -u -v github.com/golang/lint/golint
-go get -u -v github.com/kisielk/errcheck
-go get -u -v github.com/mdempsky/unconvert
-go get -u -v golang.org/x/tools/cmd/guru
-go get -u -v github.com/nsf/gocode
-go get -u -v github.com/josharian/impl
-go get -u -v golang.org/x/tools/cmd/godoc
-go get -u -v github.com/godoctor/godoctor
+go get -u golang.org/x/tools/cmd/goimports
+go get -u github.com/rogpeppe/godef
+go get -u github.com/golang/lint/golint
+go get -u github.com/kisielk/errcheck
+go get -u github.com/mdempsky/unconvert
+go get -u golang.org/x/tools/cmd/guru
+go get -u github.com/nsf/gocode
+go get -u github.com/josharian/impl
+go get -u golang.org/x/tools/cmd/godoc
+go get -u github.com/godoctor/godoctor
+go get -u github.com/jstemmer/gotags
+go get -u github.com/golang/mock/gomock
+go get -u github.com/golang/mock/mockgen
+go get -u github.com/Masterminds/glide
+go get -u github.com/motemen/gore
+go get -u github.com/aarzilli/gdlv
 
 case "$(uname -s)" in
 

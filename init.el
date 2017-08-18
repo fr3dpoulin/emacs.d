@@ -51,6 +51,7 @@
 
 (require 'init-frame-hooks)
 (require 'init-xterm)
+(require 'init-tmux)
 (require 'init-themes)
 (require 'init-osx-keys)
 (require 'init-gui-frames)
