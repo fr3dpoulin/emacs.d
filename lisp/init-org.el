@@ -1,6 +1,4 @@
-(when (< emacs-major-version 24)
-  (require-package 'org))
-(require-package 'org-fstree)
+(maybe-require-package 'org-fstree)
 (when *is-a-mac*
   (maybe-require-package 'grab-mac-link)
   (require-package 'org-mac-iCal))
@@ -51,6 +49,8 @@
 
 
 
+(require-package 'writeroom-mode)
+
 (define-minor-mode prose-mode
   "Set up a buffer for prose editing.
 This enables or modifies a number of settings so that the
@@ -59,6 +59,7 @@ typical word processor."
   nil " Prose" nil
   (if prose-mode
       (progn
+        (writeroom-mode 1)
         (setq truncate-lines nil)
         (setq word-wrap t)
         (setq cursor-type 'bar)
@@ -68,9 +69,8 @@ typical word processor."
         ;;(delete-selection-mode 1)
         (set (make-local-variable 'blink-cursor-interval) 0.6)
         (set (make-local-variable 'show-trailing-whitespace) nil)
-        (flyspell-mode 1)
-        (when (fboundp 'visual-line-mode)
-          (visual-line-mode 1)))
+        (ignore-errors (flyspell-mode 1))
+        (visual-line-mode 1))
     (kill-local-variable 'truncate-lines)
     (kill-local-variable 'word-wrap)
     (kill-local-variable 'cursor-type)
@@ -78,8 +78,8 @@ typical word processor."
     (buffer-face-mode -1)
     ;; (delete-selection-mode -1)
     (flyspell-mode -1)
-    (when (fboundp 'visual-line-mode)
-      (visual-line-mode -1))))
+    (visual-line-mode -1)
+    (writeroom-mode 0)))
 
 ;;(add-hook 'org-mode-hook 'buffer-face-mode)
 
@@ -103,11 +103,15 @@ typical word processor."
 
 (setq org-refile-use-cache nil)
 
-; Targets include this file and any file contributing to the agenda - up to 5 levels deep
+;; Targets include this file and any file contributing to the agenda - up to 5 levels deep
 (setq org-refile-targets '((nil :maxlevel . 5) (org-agenda-files :maxlevel . 5)))
 
 (after-load 'org-agenda
   (add-to-list 'org-agenda-after-show-hook 'org-show-entry))
+
+(defadvice org-refile (after sanityinc/save-all-after-refile activate)
+  "Save all org buffers after each refile operation."
+  (org-save-all-org-buffers))
 
 ;; Exclude DONE state tasks from refile targets
 (defun sanityinc/verify-refile-target ()
@@ -185,11 +189,14 @@ typical word processor."
                     (org-agenda-tags-todo-honor-ignore-options t)
                     (org-tags-match-list-sublevels t)
                     (org-agenda-todo-ignore-scheduled 'future)))
-            (tags-todo "-INBOX/NEXT"
+            (tags-todo "-INBOX"
                        ((org-agenda-overriding-header "Next Actions")
                         (org-agenda-tags-todo-honor-ignore-options t)
                         (org-agenda-todo-ignore-scheduled 'future)
-                        ;; TODO: skip if a parent is WAITING or HOLD
+                        (org-agenda-skip-function
+                         '(lambda ()
+                            (or (org-agenda-skip-subtree-if 'todo '("HOLD" "WAITING"))
+                                (org-agenda-skip-entry-if 'nottodo '("NEXT")))))
                         (org-tags-match-list-sublevels t)
                         (org-agenda-sorting-strategy
                          '(todo-state-down effort-up category-keep))))
@@ -202,7 +209,6 @@ typical word processor."
                        ((org-agenda-overriding-header "Orphaned Tasks")
                         (org-agenda-tags-todo-honor-ignore-options t)
                         (org-agenda-todo-ignore-scheduled 'future)
-                        ;; TODO: skip if a parent is a project
                         (org-agenda-skip-function
                          '(lambda ()
                             (or (org-agenda-skip-subtree-if 'todo '("PROJECT" "HOLD" "WAITING" "DELEGATED"))
@@ -222,9 +228,12 @@ typical word processor."
                         (org-agenda-todo-ignore-scheduled 'future)
                         (org-agenda-sorting-strategy
                          '(category-keep))))
-            (tags-todo "-INBOX/HOLD"
+            (tags-todo "-INBOX"
                        ((org-agenda-overriding-header "On Hold")
-                        ;; TODO: skip if a parent is WAITING or HOLD
+                        (org-agenda-skip-function
+                         '(lambda ()
+                            (or (org-agenda-skip-subtree-if 'todo '("WAITING"))
+                                (org-agenda-skip-entry-if 'nottodo '("HOLD")))))
                         (org-tags-match-list-sublevels nil)
                         (org-agenda-sorting-strategy
                          '(category-keep))))

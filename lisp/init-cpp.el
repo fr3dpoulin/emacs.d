@@ -87,7 +87,7 @@ M-x compile.
 
 
 (require-package 'rtags)
-(require 'company-rtags)
+(require-package 'company-rtags)
 
 (rtags-enable-standard-keybindings c-mode-base-map)
 (setq rtags-path (expand-file-name "rtags" user-emacs-directory))

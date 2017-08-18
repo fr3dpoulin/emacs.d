@@ -20,10 +20,12 @@ go get -u github.com/aarzilli/gdlv
 case "$(uname -s)" in
 
     Darwin)
-       brew install go-delve/delve/delve
-       ;;
+        brew install go-delve/delve/delve
+        brew install glide
+        ;;
 
     *)
-       go get -v github.com/derekparker/delve/cmd/dlv
-       ;;
+        go get -v github.com/derekparker/delve/cmd/dlv
+        curl https://glide.sh/get | sh
+        ;;
 esac
