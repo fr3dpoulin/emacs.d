@@ -83,7 +83,7 @@
 (require 'init-projectile)
 
 (require 'init-compile)
-(require 'init-crontab)
+;;(require 'init-crontab)
 (require 'init-textile)
 (require 'init-markdown)
 (require 'init-csv)
@@ -93,10 +93,14 @@
 (require 'init-html)
 (require 'init-css)
 (require 'init-python-mode)
+(require 'init-rust)
+(require 'init-toml)
 (require 'init-yaml)
 (require 'init-sql)
+(require 'init-docker)
 (require 'init-cpp)
 (require 'init-golang)
+(maybe-require-package 'terraform-mode)
 
 (require 'init-paredit)
 (require 'init-lisp)
