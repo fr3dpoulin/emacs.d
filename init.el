@@ -1,11 +1,12 @@
+;; -*- lexical-binding: t -*-
 
 ;;; This file bootstraps the configuration, which is divided into
 ;;; a number of other files.
 
-(let ((minver "24.1"))
+(let ((minver "24.3"))
   (when (version< emacs-version minver)
     (error "Your Emacs is too old -- this config requires v%s or higher" minver)))
-(when (version< emacs-version "24.4")
+(when (version< emacs-version "24.5")
   (message "Your Emacs is old, and some functionality in this config will be disabled. Please upgrade if possible."))
 
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
@@ -15,13 +16,13 @@
 (defconst *is-a-mac* (eq system-type 'darwin))
 
 ;;----------------------------------------------------------------------------
-;; Temporarily reduce garbage collection during startup
+;; Adjust garbage collection thresholds during startup, and thereafter
 ;;----------------------------------------------------------------------------
-(defconst sanityinc/initial-gc-cons-threshold gc-cons-threshold
-  "Initial value of `gc-cons-threshold' at start-up time.")
-(setq gc-cons-threshold (* 128 1024 1024))
-(add-hook 'after-init-hook
-          (lambda () (setq gc-cons-threshold sanityinc/initial-gc-cons-threshold)))
+(let ((normal-gc-cons-threshold (* 20 1024 1024))
+      (init-gc-cons-threshold (* 128 1024 1024)))
+  (setq gc-cons-threshold init-gc-cons-threshold)
+  (add-hook 'after-init-hook
+            (lambda () (setq gc-cons-threshold normal-gc-cons-threshold))))
 
 ;;----------------------------------------------------------------------------
 ;; Bootstrap config
@@ -73,7 +74,6 @@
 
 (require 'init-editing-utils)
 (require 'init-whitespace)
-(require 'init-fci)
 
 (require 'init-vc)
 (require 'init-git)
@@ -92,6 +92,7 @@
 (require 'init-nxml)
 (require 'init-html)
 (require 'init-css)
+(require 'init-http)
 (require 'init-python-mode)
 (require 'init-rust)
 (require 'init-toml)
@@ -105,9 +106,8 @@
 (require 'init-paredit)
 (require 'init-lisp)
 (require 'init-slime)
-(unless (version<= emacs-version "24.2")
-  (require 'init-clojure)
-  (require 'init-clojure-cider))
+(require 'init-clojure)
+(require 'init-clojure-cider)
 (require 'init-common-lisp)
 
 (when *spell-check-support-enabled*
