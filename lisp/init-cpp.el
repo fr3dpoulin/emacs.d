@@ -1,6 +1,7 @@
 (require-package 'glasses)
 (require-package 'cmake-mode)
-(require-package 'column-marker)
+;;(require-package 'column-marker)
+(require 'column-marker)
 
 ;;----------------------------------------------------------------------------
 ;; Open .h as C++ files as opposed to C file

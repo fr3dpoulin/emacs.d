@@ -14,6 +14,10 @@ made the following configuration changes:
 * disabled Elm
 * disabled Erlang
 
+It also uses the "Hack" fontset that must be installed on the system -
+follow the instructions here: https://sourcefoundry.org/hack/
+
+
 # A reasonable Emacs config
 
 This is my emacs configuration tree, continually used and tweaked
