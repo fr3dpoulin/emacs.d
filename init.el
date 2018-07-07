@@ -103,6 +103,7 @@
 (require 'init-cpp)
 (require 'init-golang)
 (require 'init-terraform)
+(require 'init-octave)
 (maybe-require-package 'nginx-mode)
 
 (require 'init-paredit)

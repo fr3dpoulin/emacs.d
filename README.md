@@ -8,6 +8,7 @@ made the following configuration changes:
 
 * added C++ mode (based on rtags)
 * added golang mode
+* added octave mode
 * disabled Ruby related configuration
 * disbaled PHP
 * disabled Haskell
