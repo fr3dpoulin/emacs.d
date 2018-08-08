@@ -18,6 +18,49 @@ made the following configuration changes:
 It also uses the "Hack" fontset that must be installed on the system -
 follow the instructions here: https://sourcefoundry.org/hack/
 
+## Pre-requisites
+
+* golang 1.9+ installed (for golang mode)
+* The following packages (for C++ development):
+  * pkg-config
+  * zlib
+  * openssl
+  * LLVM/CLang >= 3.3
+  * cmake >= 2.8
+  * libclang
+  
+TODO: would be nice to capture the apt-get command required for a new
+install.
+
+## Pre-emacs launch notes
+
+I suggest to run the golang installation before launching emacs for
+the first time with this configuration:
+
+```
+# ~/.emacs.d/golang/bootstrap.sh
+```
+
+This will install pre-requisites binaries for golang development mode.
+
+## Post-install notes
+
+After launching emacs for the first time (or after upgrading packages
+from ELPA), I suggest doing the rtags install (see
+https://github.com/Andersbakken/rtags for more details):
+
+```
+M-x rtags-install <ret>
+```
+
+or the version with parameters:
+
+```
+M-: (rtags-install nil "-DLIBCLANG_LLVM_CONFIG_EXECUTABLE=/usr/local//Cellar/llvm/4.0.0/bin/llvm-config") <ret>
+```
+
+I also strongly suggest to follow the instructions on how to hook
+rtags with systemd (or launchd on the Mac).
 
 # A reasonable Emacs config
 

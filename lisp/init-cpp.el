@@ -89,14 +89,32 @@ M-x compile.
 
 (require-package 'rtags)
 (require-package 'company-rtags)
+(require-package 'ivy-rtags)
+
+;; Some notes:
+;;
+;; - Restart the rdm process
+;;
+;;     (rtags-restart-process)
+;;
+;; -
+
 
 (rtags-enable-standard-keybindings c-mode-base-map)
 (setq rtags-path (expand-file-name "rtags" user-emacs-directory))
+(setq rtags-autostart-diagnostics t)
 (setq rtags-completions-enabled t)
+(setq rtags-display-result-backend 'ivy)
 
 (defun my-rtags-setup ()
+
   (setq company-backends (delete 'company-clang company-backends))
-  (add-to-list 'company-backends 'company-rtags)
+  (push 'company-rtags company-backends)
+
+  ;; Start an async process in a buffer to receive warnings/errors
+  ;; from clang whenever a file gets reindexed. It integrates with
+  ;; flymake to put highlighting on code with warnings and errors
+
   (rtags-diagnostics)
   )
 
