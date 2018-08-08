@@ -104,6 +104,7 @@
 (require 'init-golang)
 (require 'init-terraform)
 (require 'init-octave)
+(require 'init-editorconfig)
 (maybe-require-package 'nginx-mode)
 
 (require 'init-paredit)
