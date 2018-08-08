@@ -1,6 +1,6 @@
 (require-package 'glasses)
 (require-package 'cmake-mode)
-;;(require-package 'column-marker)
+;;(require-package 'column-marker) - not in MELPA anymore
 (require 'column-marker)
 
 ;;----------------------------------------------------------------------------
@@ -51,44 +51,41 @@
 (defun compile-again (pfx)
   """Run the same compile as the last time.
 
-If there was no last time, or there is a prefix argument, this acts like
-M-x compile.
+If there was no last time, or there is a prefix argument, this
+acts like M-x compile.
 """
-(interactive "p")
-(if (and (eq pfx 1)
-         compilation-last-buffer)
-    (progn
-      (set-buffer compilation-last-buffer)
-      (revert-buffer t t))
-  (call-interactively 'compile)))
+  (interactive "p")
+  (if (and (eq pfx 1)
+           compilation-last-buffer)
+      (progn
+        (set-buffer compilation-last-buffer)
+        (revert-buffer t t))
+    (call-interactively 'compile)))
 
 (defun my-compile-again-setup ()
-  (local-set-key (kbd "C-c C-c") 'compile-again)
-  )
+  (local-set-key (kbd "C-c C-c") 'compile-again))
 
 (add-hook 'c-mode-common-hook #'my-compile-again-setup)
 
 
 
-(require-package 'company-c-headers)
+(when (maybe-require-package 'company-c-headers)
+  (after-load 'company
+    (defun my-enable-company-c-headers ()
+      (sanityinc/local-push-company-backend 'company-c-headers)
+      (local-set-key (kbd "M-/") 'company-complete)
+      ;; TODO: these should probably be automatically detected or added
+      ;; through a local elisp file
+      ;; (add-to-list 'company-c-headers-path-system "/opt/local/libexec/llvm-3.5/include/c++/v1")
+      ;; (add-to-list 'company-c-headers-path-system "/opt/local/libexec/llvm-3.5/lib/clang/3.5.0/include")
+      ;; (add-to-list 'company-c-headers-path-system "/System/Library/Frameworks")
+      ;; (add-to-list 'company-c-headers-path-system "/Library/Frameworks")
+      )
 
-(defun my-enable-company-c-headers ()
-  (add-to-list 'company-backends 'company-c-headers)
-  (local-set-key (kbd "M-/") 'company-complete)
-  ;; TODO: these should probably be automatically detected or added
-  ;; through a local elisp file
-  ;; (add-to-list 'company-c-headers-path-system "/opt/local/libexec/llvm-3.5/include/c++/v1")
-  ;; (add-to-list 'company-c-headers-path-system "/opt/local/libexec/llvm-3.5/lib/clang/3.5.0/include")
-  ;; (add-to-list 'company-c-headers-path-system "/System/Library/Frameworks")
-  ;; (add-to-list 'company-c-headers-path-system "/Library/Frameworks")
-  )
-
-(add-hook 'company-mode-hook #'my-enable-company-c-headers)
-;;(add-hook 'c-mode-common-hook #'my-enable-company-c-headers)
+    (add-hook 'c-mode-common-hook #'my-enable-company-c-headers)))
 
 
 (require-package 'rtags)
-(require-package 'company-rtags)
 (require-package 'ivy-rtags)
 
 ;; Some notes:
@@ -99,26 +96,28 @@ M-x compile.
 ;;
 ;; -
 
-
 (rtags-enable-standard-keybindings c-mode-base-map)
 (setq rtags-path (expand-file-name "rtags" user-emacs-directory))
 (setq rtags-autostart-diagnostics t)
 (setq rtags-completions-enabled t)
 (setq rtags-display-result-backend 'ivy)
 
-(defun my-rtags-setup ()
+(when (maybe-require-package 'company-rtags)
+  (after-load 'company
+    (add-hook 'c-mode-common-hook
+              (lambda ()
+                ;; We are removing the company-clang to make sure it
+                ;; does not conflict with the rtags one.
+                (sanityinc/local-push-company-backend 'company-rtags)
+                (setq company-backends (delete 'company-clang company-backends))))))
 
-  (setq company-backends (delete 'company-clang company-backends))
-  (push 'company-rtags company-backends)
-
-  ;; Start an async process in a buffer to receive warnings/errors
-  ;; from clang whenever a file gets reindexed. It integrates with
-  ;; flymake to put highlighting on code with warnings and errors
-
-  (rtags-diagnostics)
-  )
-
-(add-hook 'c-mode-common-hook #'my-rtags-setup)
+(add-hook 'c-mode-common-hook
+          (lambda ()
+            ;; I am not sure if this is really required sing we have
+            ;; now the rtags-autostart-diagnostic set above, but this
+            ;; does not seem to hurt
+            (rtags-diagnostics)
+            ))
 
 ;; turn-off flycheck since we got rtags-diagnostics
 ;;  This is a pretty bad hack but I am not sure how to do this better...
