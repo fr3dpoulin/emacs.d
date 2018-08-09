@@ -43,6 +43,10 @@ the first time with this configuration:
 
 This will install pre-requisites binaries for golang development mode.
 
+```
+sudo apt-get install editorconfig
+```
+
 ## Post-install notes
 
 After launching emacs for the first time (or after upgrading packages
@@ -61,6 +65,14 @@ M-: (rtags-install nil "-DLIBCLANG_LLVM_CONFIG_EXECUTABLE=/usr/local//Cellar/llv
 
 I also strongly suggest to follow the instructions on how to hook
 rtags with systemd (or launchd on the Mac).
+
+You also need to create a symbolic link between the rtags binary
+folder under the melpa folder and directly under your `.emacs.d`
+folder:
+
+```
+# ln -s ~/.emacs.d/elpa-26.1/rtags-20180730.654/rtags-2.19/bin ~/.emacs.d/rtags
+```
 
 # A reasonable Emacs config
 

@@ -117,6 +117,7 @@ acts like M-x compile.
             ;; now the rtags-autostart-diagnostic set above, but this
             ;; does not seem to hurt
             (rtags-diagnostics)
+            (guide-key/add-local-guide-key-sequence "C-c r")
             ))
 
 ;; turn-off flycheck since we got rtags-diagnostics
