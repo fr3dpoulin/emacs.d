@@ -85,8 +85,19 @@ acts like M-x compile.
     (add-hook 'c-mode-common-hook #'my-enable-company-c-headers)))
 
 
+(when (maybe-require-package 'modern-cpp-font-lock)
+  (add-hook 'c++-mode-hook #'modern-c++-font-lock-mode))
+
+
 (require-package 'rtags)
 (require-package 'ivy-rtags)
+
+;; TODO: Need to move elsewhere...
+;; From https://geokon-gh.github.io/.emacs.d/
+;;
+;; (setq image-animate-loop t)
+;;
+;; Note - check for package symon (tiny in-bar system monitor)
 
 ;; Some notes:
 ;;
@@ -102,14 +113,56 @@ acts like M-x compile.
 (setq rtags-completions-enabled t)
 (setq rtags-display-result-backend 'ivy)
 
+;; New stuff to look into
+;; (rtags-enable-standard-keybindings)
+
 (when (maybe-require-package 'company-rtags)
   (after-load 'company
     (add-hook 'c-mode-common-hook
               (lambda ()
+                (sanityinc/local-push-company-backend 'company-rtags)
                 ;; We are removing the company-clang to make sure it
                 ;; does not conflict with the rtags one.
-                (sanityinc/local-push-company-backend 'company-rtags)
-                (setq company-backends (delete 'company-clang company-backends))))))
+                (setq-local company-backends (delete 'company-clang company-backends))))))
+
+
+;; Inspired by https://eklitzke.org/smarter-emacs-clang-format
+;;
+;; If a .clang-format file exists, will automatically run
+;; clang-format-buffer when saving.
+;;
+;; TODO: this depends on projectile - how do I capture this?
+(defun sanityinc/clang-format-buffer-smart ()
+  "Reformat buffer if .clang-format exists in the projectile root."
+  (when (f-exists? (expand-file-name ".clang-format" (projectile-project-root)))
+    (clang-format-buffer))
+  )
+
+(when (maybe-require-package 'clang-format)
+  (add-hook 'c-mode-common-hook
+            (lambda ()
+              (add-hook 'before-save-hook 'sanityinc/clang-format-buffer-smart nil t)
+              ;;
+              ;; TODO: if there is a region selected, I would like to
+              ;; instead call 'clang-format-region
+              (local-set-key (kbd "C-M-tab") 'clang-format-region)
+              )))
+
+;; From https://oremacs.com/2017/03/28/emacs-cpp-ide/
+(defun sanityinc/cpp-goto-symbol ()
+  (interactive)
+  (deactivate-mark)
+  (ring-insert find-tag-marker-ring (point-marker))
+
+  ;; (or (and (require 'rtags nil t)
+  ;;          (rtags-find-symbol-at-point))
+  ;;     (and (require 'semantic/ia)
+  ;;          (condition-case nil
+  ;;              (semantic-ia-fast-jump (point))
+  ;;            (error nil))))
+
+  (rtags-find-symbol-at-point)
+  )
 
 (add-hook 'c-mode-common-hook
           (lambda ()
@@ -118,6 +171,15 @@ acts like M-x compile.
             ;; does not seem to hurt
             (rtags-diagnostics)
             (guide-key/add-local-guide-key-sequence "C-c r")
+
+            (local-set-key (kbd "M-.") 'sanityinc/cpp-goto-symbol)
+            (local-set-key (kbd "M-,") 'pop-tag-mark)
+            (local-set-key (kbd "M-?") 'rtags-display-summary)
+
+            ;; This was similar to my golang mode but I believe M-, is
+            ;; more "standard" than M-* and also easier to use.
+            ;;(local-set-key (kbd "M-*") 'rtags-location-stack-back)
+
             ))
 
 ;; turn-off flycheck since we got rtags-diagnostics
@@ -144,13 +206,14 @@ acts like M-x compile.
 
 
 (require 'glasses)
-(add-hook 'c-mode-common-hook (lambda ()
-                                (glasses-mode t)
-                                (setq-default glasses-face (quote bold))
-                                (setq-default glasses-separate-parentheses-p nil)
-                                (setq-default glasses-separator nil)
-                                (setq-default glasses-original-separator nil)
-                                (glasses-set-overlay-properties)))
+(add-hook 'c-mode-common-hook
+          (lambda ()
+            (glasses-mode t)
+            (setq-default glasses-face (quote bold))
+            (setq-default glasses-separate-parentheses-p nil)
+            (setq-default glasses-separator nil)
+            (setq-default glasses-original-separator nil)
+            (glasses-set-overlay-properties)))
 
 
 (require 'cmake-mode)
