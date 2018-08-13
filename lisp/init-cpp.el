@@ -145,7 +145,7 @@ acts like M-x compile.
               ;;
               ;; TODO: if there is a region selected, I would like to
               ;; instead call 'clang-format-region
-              (local-set-key (kbd "C-M-tab") 'clang-format-region)
+              (local-set-key (kbd "C-M-TAB") 'clang-format-region)
               )))
 
 ;; From https://oremacs.com/2017/03/28/emacs-cpp-ide/
