@@ -1,7 +1,3 @@
-;;; Using Source Code Pro font
-
-;; https://github.com/adobe-fonts/source-code-pro
-
 (set-default-font "Hack")
 
 
