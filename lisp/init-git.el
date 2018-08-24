@@ -21,7 +21,9 @@
 
 (when (maybe-require-package 'magit-todos)
   (after-load 'magit
-    (magit-todos-mode)))
+    (magit-todos-mode)
+    (when (eq system-type 'windows-nt)
+      (setq magit-todos-nice nil))))
 
 (require-package 'fullframe)
 (after-load 'magit
