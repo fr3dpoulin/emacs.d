@@ -37,6 +37,8 @@
   (after-load 'magit
     (add-hook 'magit-mode-hook (lambda () (local-unset-key [(meta h)])))))
 
+(when (eq system-type 'windows-nt)
+  (require-package 'ssh-agency))
 
 
 ;; Convenient binding for vc-git-grep
