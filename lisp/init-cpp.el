@@ -272,48 +272,51 @@ acts like M-x compile.
 ;;(require-package 'emacs-cquery)
 (require-package 'cquery)
 
-(require 'cquery)
-(setq cquery-executable "/usr/local/bin/cquery")
-
-(add-hook 'c-mode-common-hook #'lsp-cquery-enable)
-
 (defun flatten(x)
   (cond ((null x) nil)
         ((listp x) (append (flatten (car x)) (flatten (cdr x))))
         (t (list x))))
 
-(when (maybe-require-package 'company-lsp)
-  (after-load 'company
-    (add-hook 'c-mode-common-hook
-              (lambda ()
+(let ((my-cquery-path (executable-find "cquery")))
+  (when my-cquery-path
+    (require 'cquery)
 
-                ;;(sanityinc/local-push-company-backend 'company-lsp)
+    (setq cquery-executable my-cquery-path)
+    (add-hook 'c-mode-common-hook #'lsp-cquery-enable)
 
-                (make-local-variable 'company-backends)
-                (setq company-backends (list 'company-lsp 'company-cmake 'company-capf 'company-files))
+    (when (maybe-require-package 'company-lsp)
+      (after-load 'company
+        (add-hook 'c-mode-common-hook
+                  (lambda ()
 
-                ;; ;; Remove a bunch of company backends that are covered
-                ;; ;; by company-lsp. Also, for some reasons,
-                ;; ;; company-backends sometime shows up with recursive
-                ;; ;; backend list (not sure where this is coming
-                ;; ;; from) but this will flatten it.
+                    (make-local-variable 'company-backends)
+                    ;;(setq company-backends (list 'company-lsp 'company-cmake 'company-capf 'company-files))
 
-                ;; (setq company-backends (flatten company-backends))
-                ;; (setq company-backends (delete 'company-clang company-backends))
-                ;; (setq company-backends (delete 'company-semantic company-backends))
-                ;; ;;(setq company-backends (delete 'company-dabbrev-code company-backends))
-                ;; (setq company-backends (delete 'company-xcode company-backends))
+                    ;; Remove a bunch of company backends that are covered
+                    ;; by company-lsp. Also, for some reasons,
+                    ;; company-backends sometime shows up with recursive
+                    ;; backend list (not sure where this is coming
+                    ;; from) but this will flatten it.
 
-                ;; Configure company-lsp to disable client-side
-                ;; cache/sorting because the server does a better job.
+                    (setq company-backends (flatten company-backends))
 
-                (setq company-transformers nil)
-                (setq company-lsp-async t)
-                (setq company-lsp-cache-candidates nil)
+                    (setq company-backends (delete 'company-clang company-backends))
+                    (setq company-backends (delete 'company-semantic company-backends))
+                    ;;(setq company-backends (delete 'company-dabbrev-code company-backends))
+                    (setq company-backends (delete 'company-xcode company-backends))
 
-                ;; We are removing the company-clang to make sure it
-                ;; does not conflict with the lsp one.
-                ;;(setq-local company-backends (delete 'company-clang company-backends))
-                )))
+                    (push 'company-lsp company-backends)
 
-  (provide 'init-cpp))
+                    ;; Configure company-lsp to disable client-side
+                    ;; cache/sorting because the server does a better job.
+
+                    (setq company-transformers nil)
+                    (setq company-lsp-async t)
+                    (setq company-lsp-cache-candidates nil)
+                    )
+                  )
+        )
+      )
+    ))
+
+(provide 'init-cpp)
