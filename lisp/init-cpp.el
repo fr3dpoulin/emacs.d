@@ -277,6 +277,14 @@ acts like M-x compile.
         ((listp x) (append (flatten (car x)) (flatten (cdr x))))
         (t (list x))))
 
+(when (maybe-require-package 'lsp-ui)
+  (require 'lsp-ui)
+
+  (add-hook 'lsp-mode-hook #'lsp-ui-mode)
+
+  (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
+  (define-key lsp-ui-mode-map [remap xref-find-references] #'lsp-ui-peek-find-references))
+
 (let ((my-cquery-path (executable-find "cquery")))
   (when my-cquery-path
     (require 'cquery)

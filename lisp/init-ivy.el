@@ -62,7 +62,7 @@ instead."
                            (projectile-project-root)
                          (error default-directory)))))
             (funcall search-function initial-input dir)))))
-    (global-set-key (kbd "M-?") 'sanityinc/counsel-search-project)))
+    (global-set-key (kbd "M-C-?") 'sanityinc/counsel-search-project)))
 
 
 (when (maybe-require-package 'swiper)
