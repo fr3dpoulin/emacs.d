@@ -282,6 +282,8 @@ acts like M-x compile.
 
   (add-hook 'lsp-mode-hook #'lsp-ui-mode)
 
+  (setq lsp-ui-sideline-show-hover nil)
+
   (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
   (define-key lsp-ui-mode-map [remap xref-find-references] #'lsp-ui-peek-find-references))
 
