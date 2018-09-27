@@ -1,17 +1,14 @@
 (when (maybe-require-package 'projectile)
   (add-hook 'after-init-hook 'projectile-mode)
 
+  ;; Shorter modeline
+  (setq-default projectile-mode-line-lighter " Proj")
+
   (after-load 'projectile
     (define-key projectile-mode-map (kbd "C-c C-p") 'projectile-command-map)
+    (global-set-key (kbd "C-x p") 'projectile-find-file))
 
-    ;; Shorter modeline
-    (setq-default
-     projectile-mode-line
-     '(:eval
-       (if (file-remote-p default-directory)
-           " Proj"
-         (format " Proj[%s]" (projectile-project-name)))))
-    (global-set-key (kbd "C-x p") 'projectile-find-file)))
+  (maybe-require-package 'ibuffer-projectile))
 
 
 (provide 'init-projectile)
