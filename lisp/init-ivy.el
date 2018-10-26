@@ -10,7 +10,7 @@
                   ivy-dynamic-exhibit-delay-ms 150
                   magit-completing-read-function 'ivy-completing-read
                   ivy-initial-inputs-alist
-                  '((man . "^")
+                  '((Man-completion-table . "^")
                     (woman . "^")))
 
     ;; IDO-style directory navigation
