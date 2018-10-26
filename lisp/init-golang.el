@@ -86,29 +86,31 @@
         ((listp x) (append (flatten (car x)) (flatten (cdr x))))
         (t (list x))))
 
-(when (maybe-require-package 'company-lsp)
-  (after-load 'company
-    (add-hook 'go-mode-hook
-              #'(lambda ()
-                  (make-local-variable 'company-backends)
-                  ;;(setq company-backends (list 'company-lsp 'company-cmake 'company-capf 'company-files))
+;; Not needed since it is covered in the init-cpp.el
 
-                  ;; Remove a bunch of company backends that are covered
-                  ;; by company-lsp. Also, for some reasons,
-                  ;; company-backends sometime shows up with recursive
-                  ;; backend list (not sure where this is coming
-                  ;; from) but this will flatten it.
+;; (when (maybe-require-package 'company-lsp)
+;;   (after-load 'company
+;;     (add-hook 'go-mode-hook
+;;               #'(lambda ()
+;;                   (make-local-variable 'company-backends)
+;;                   ;;(setq company-backends (list 'company-lsp 'company-cmake 'company-capf 'company-files))
 
-                  (setq company-backends (flatten company-backends))
+;;                   ;; Remove a bunch of company backends that are covered
+;;                   ;; by company-lsp. Also, for some reasons,
+;;                   ;; company-backends sometime shows up with recursive
+;;                   ;; backend list (not sure where this is coming
+;;                   ;; from) but this will flatten it.
 
-                  (setq company-backends (delete 'company-clang company-backends))
-                  (setq company-backends (delete 'company-semantic company-backends))
-                  ;;(setq company-backends (delete 'company-dabbrev-code company-backends))
-                  (setq company-backends (delete 'company-xcode company-backends))
+;;                   (setq company-backends (flatten company-backends))
 
-                  (push 'company-lsp company-backends)
+;;                   (setq company-backends (delete 'company-clang company-backends))
+;;                   (setq company-backends (delete 'company-semantic company-backends))
+;;                   ;;(setq company-backends (delete 'company-dabbrev-code company-backends))
+;;                   (setq company-backends (delete 'company-xcode company-backends))
 
-                  ))))
+;;                   (push 'company-lsp company-backends)
+
+;;                   ))))
 
 ;; C-c C-a : go-import-add (add a new import)
 ;; go-remove-unused-imports

@@ -71,17 +71,17 @@ acts like M-x compile.
 
 (when (maybe-require-package 'company-c-headers)
   (after-load 'company
-    (add-hook 'c-mode-common-hook
-              (lambda ()
-                (sanityinc/local-push-company-backend 'company-c-headers)
-                ;;(local-set-key (kbd "M-/") 'company-complete)
-                ;; TODO: these should probably be automatically detected or added
-                ;; through a local elisp file
-                ;; (add-to-list 'company-c-headers-path-system "/opt/local/libexec/llvm-3.5/include/c++/v1")
-                ;; (add-to-list 'company-c-headers-path-system "/opt/local/libexec/llvm-3.5/lib/clang/3.5.0/include")
-                ;; (add-to-list 'company-c-headers-path-system "/System/Library/Frameworks")
-                ;; (add-to-list 'company-c-headers-path-system "/Library/Frameworks")
-                ))))
+    (push 'company-c-headers company-backends)
+    ;; (add-hook 'c-mode-common-hook
+    ;;           (lambda ()
+    ;;(local-set-key (kbd "M-/") 'company-complete)
+    ;; TODO: these should probably be automatically detected or added
+    ;; through a local elisp file
+    ;; (add-to-list 'company-c-headers-path-system "/opt/local/libexec/llvm-3.5/include/c++/v1")
+    ;; (add-to-list 'company-c-headers-path-system "/opt/local/libexec/llvm-3.5/lib/clang/3.5.0/include")
+    ;; (add-to-list 'company-c-headers-path-system "/System/Library/Frameworks")
+    ;; (add-to-list 'company-c-headers-path-system "/Library/Frameworks")))
+    ))
 
 
 
@@ -294,39 +294,25 @@ acts like M-x compile.
     (setq cquery-executable my-cquery-path)
     (add-hook 'c-mode-common-hook #'lsp-cquery-enable)
 
+    (message "Goober")
+
+    (after-load 'projectile
+      (add-to-list 'projectile-globally-ignored-directories ".cquery_cached_index"))
+
     (when (maybe-require-package 'company-lsp)
       (after-load 'company
-        (add-hook 'c-mode-common-hook
-                  (lambda ()
 
-                    (make-local-variable 'company-backends)
-                    ;;(setq company-backends (list 'company-lsp 'company-cmake 'company-capf 'company-files))
+        (setq company-backends (flatten company-backends))
 
-                    ;; Remove a bunch of company backends that are covered
-                    ;; by company-lsp. Also, for some reasons,
-                    ;; company-backends sometime shows up with recursive
-                    ;; backend list (not sure where this is coming
-                    ;; from) but this will flatten it.
+        (delq 'company-clang company-backends)
+        (delq 'company-xcode company-backends)
+        (push 'compny-lsp company-backends)
 
-                    (setq company-backends (flatten company-backends))
+        (setq company-transformers nil)
 
-                    (setq company-backends (delete 'company-clang company-backends))
-                    (setq company-backends (delete 'company-semantic company-backends))
-                    ;;(setq company-backends (delete 'company-dabbrev-code company-backends))
-                    (setq company-backends (delete 'company-xcode company-backends))
-
-                    (push 'company-lsp company-backends)
-
-                    ;; Configure company-lsp to disable client-side
-                    ;; cache/sorting because the server does a better job.
-
-                    (setq company-transformers nil)
-                    (setq company-lsp-async t)
-                    (setq company-lsp-cache-candidates nil)
-                    )
-                  )
+        (setq company-lsp-async t)
+        (setq company-lsp-cache-candidates nil)
         )
-      )
-    ))
+      )))
 
 (provide 'init-cpp)
