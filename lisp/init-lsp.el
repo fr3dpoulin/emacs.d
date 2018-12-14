@@ -12,7 +12,7 @@
 
 (defun sanityinc/flatten(x)
   (cond ((null x) nil)
-        ((listp x) (append (flatten (car x)) (flatten (cdr x))))
+        ((listp x) (append (sanityinc/flatten (car x)) (sanityinc/flatten (cdr x))))
         (t (list x))))
 
 (when (maybe-require-package 'company-lsp)
