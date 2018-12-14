@@ -81,6 +81,7 @@
 (require 'init-snippets)
 
 (require 'init-projectile)
+(require 'init-lsp)
 
 (require 'init-compile)
 ;;(require 'init-crontab)

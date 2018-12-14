@@ -268,51 +268,24 @@ acts like M-x compile.
 
 
 
-(require-package 'lsp-mode)
-;;(require-package 'emacs-cquery)
-(require-package 'cquery)
+(let ((my-ccls-path (executable-find "ccls")))
+  (when my-ccls-path
+    (require-package 'ccls)
+    (require 'ccls)
 
-(defun flatten(x)
-  (cond ((null x) nil)
-        ((listp x) (append (flatten (car x)) (flatten (cdr x))))
-        (t (list x))))
-
-(when (maybe-require-package 'lsp-ui)
-  (require 'lsp-ui)
-
-  (add-hook 'lsp-mode-hook #'lsp-ui-mode)
-
-  (setq lsp-ui-sideline-show-hover nil)
-
-  (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
-  (define-key lsp-ui-mode-map [remap xref-find-references] #'lsp-ui-peek-find-references))
-
-(let ((my-cquery-path (executable-find "cquery")))
-  (when my-cquery-path
-    (require 'cquery)
-
-    (setq cquery-executable my-cquery-path)
-    (add-hook 'c-mode-common-hook #'lsp-cquery-enable)
-
-    (message "Goober")
+    (setq ccls-executable my-ccls-path)
+    (add-hook 'c-mode-common-hook #'lsp)
 
     (after-load 'projectile
-      (add-to-list 'projectile-globally-ignored-directories ".cquery_cached_index"))
+      (add-to-list 'projectile-globally-ignored-directories ".ccls-cache"))
 
     (when (maybe-require-package 'company-lsp)
       (after-load 'company
+        (setq-local company-transformers nil)
 
-        (setq company-backends (flatten company-backends))
-
-        (delq 'company-clang company-backends)
-        (delq 'company-xcode company-backends)
-        (push 'compny-lsp company-backends)
-
-        (setq company-transformers nil)
-
-        (setq company-lsp-async t)
-        (setq company-lsp-cache-candidates nil)
-        )
-      )))
+        (setq-local company-lsp-async t)
+        (setq-local company-lsp-cache-candidates nil)))
+    )
+  )
 
 (provide 'init-cpp)
