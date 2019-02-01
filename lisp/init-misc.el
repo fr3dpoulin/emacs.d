@@ -1,3 +1,7 @@
+;;; init-misc.el --- Miscellaneous config -*- lexical-binding: t -*-
+;;; Commentary:
+;;; Code:
+
 ;;----------------------------------------------------------------------------
 ;; Misc config - yet to be placed in separate files
 ;;----------------------------------------------------------------------------
@@ -61,3 +65,4 @@
 
 
 (provide 'init-misc)
+;;; init-misc.el ends here
