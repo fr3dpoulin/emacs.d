@@ -1,3 +1,11 @@
+;;; init-golang.el --- Go language (golang) mode -*- lexical-binding: t -*-
+;;; Commentary:
+
+;; Depends on init-lsp to have been configured properly before
+;; loading.
+
+;;; Code:
+
 (require-package 'go-mode)
 ;; (require-package 'flymake-go)
 ;;(require-package 'company-go)
@@ -134,3 +142,4 @@
               (guide-key/add-local-guide-key-sequence "C-c C-o") )))
 
 (provide 'init-golang)
+;;; init-golang.el ends here

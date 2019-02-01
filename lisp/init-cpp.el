@@ -1,3 +1,10 @@
+;;; init-cpp.el --- C/C++ mode -*- lexical-binding: t -*-
+;;; Commentary:
+
+;;   This depends on init-lsp to be loaded up first.
+
+;;; Code:
+
 (require-package 'glasses)
 (require-package 'cmake-mode)
 ;;(require-package 'column-marker) - not in MELPA anymore
@@ -289,3 +296,4 @@ acts like M-x compile.
   )
 
 (provide 'init-cpp)
+;;; init-cpp.el ends here

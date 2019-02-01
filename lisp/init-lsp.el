@@ -1,3 +1,7 @@
+;;; init-lsp.el --- Language Server Protocol -*- lexical-binding: t -*-
+;;; Commentary:
+;;; Code:
+
 (require-package 'lsp-mode)
 
 (when (maybe-require-package 'lsp-ui)
@@ -25,3 +29,4 @@
     (push 'company-lsp company-backends)))
 
 (provide 'init-lsp)
+;;; init-lsp.el ends here

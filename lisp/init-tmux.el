@@ -1,3 +1,7 @@
+;;; init-tmux.el --- Tmux compatibility helpers -*- lexical-binding: t -*-
+;;; Commentary:
+;;; Code:
+
 (defadvice terminal-init-screen
     ;; The advice is named `tmux', and is run before `terminal-init-screen' runs.
     (before tmux activate)
@@ -11,3 +15,4 @@
         (set-keymap-parent input-decode-map map))))
 
 (provide 'init-tmux)
+;;; init-tmux.el ends here

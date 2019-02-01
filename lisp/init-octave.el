@@ -1,3 +1,7 @@
+;;; init-octave.el --- Matlab/octave mode configuration -*- lexical-binding: t -*-
+;;; Commentary:
+;;; Code:
+
 (require-package 'matlab-mode)
 
 ;; Associate .m files with octave (or matlab)
@@ -53,3 +57,4 @@
 ;; (modify-syntax-entry ?% "<"  octave-mode-syntax-table)
 
 (provide 'init-octave)
+;;; init-octave.el ends here
