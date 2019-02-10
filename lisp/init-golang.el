@@ -33,19 +33,7 @@
   (exec-path-from-shell-copy-env "GOPATH"))
 
 ;; Use lsp-mode
-(add-hook 'go-mode-hook #'lsp-go-enable)
-
-;; TODO: apply to all lsp-mode - should we do something more specific to golang and/or C++ ?
-(when (maybe-require-package 'lsp-ui)
-  (require 'lsp-ui)
-
-  (add-hook 'lsp-mode-hook #'lsp-ui-mode)
-
-  (setq lsp-ui-sideline-show-hover nil)
-
-  (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
-  (define-key lsp-ui-mode-map [remap xref-find-references] #'lsp-ui-peek-find-references))
-
+;; (add-hook 'go-mode-hook #'lsp-go-enable)
 
 ;; Define function to call when go-mode loads
 (defun my-go-mode-hook ()
